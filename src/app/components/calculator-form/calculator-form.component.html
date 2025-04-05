@@ -5,29 +5,37 @@
       <ion-select-option value="indefinido">Indefinido</ion-select-option>
       <ion-select-option value="termino-fijo">Término Fijo</ion-select-option>
       <ion-select-option value="obra-labor">Obra o Labor</ion-select-option>
+      <ion-select-option value="prestacion-servicios">Prestación de Servicios</ion-select-option>
     </ion-select>
   </ion-item>
 
   <ion-item>
-    <ion-label position="floating">Salario Bruto (COP)</ion-label>
+    <ion-label position="floating">Ingresos Brutos Mensuales (COP)</ion-label>
     <ion-input type="number" formControlName="salarioBruto"></ion-input>
   </ion-item>
   <ion-text color="secondary">SMLV 2025 (aproximado): {{ smlv2025 | number }}</ion-text>
 
-  <ion-item>
-    <ion-label>Pagar Salud (4%)</ion-label>
-    <ion-checkbox formControlName="pagarSalud"></ion-checkbox>
-  </ion-item>
+  <div *ngIf="calculatorForm.get('tipoContrato')?.value !== 'prestacion-servicios'">
+    <ion-item>
+      <ion-label>Pagar Salud (4%)</ion-label>
+      <ion-checkbox formControlName="pagarSalud"></ion-checkbox>
+    </ion-item>
 
-  <ion-item>
-    <ion-label>Pagar Pensión (4%)</ion-label>
-    <ion-checkbox formControlName="pagarPension"></ion-checkbox>
-  </ion-item>
+    <ion-item>
+      <ion-label>Pagar Pensión (4%)</ion-label>
+      <ion-checkbox formControlName="pagarPension"></ion-checkbox>
+    </ion-item>
 
-  <ion-item>
-    <ion-label>Pagar Fondo de Solidaridad Pensional (si aplica)</ion-label>
-    <ion-checkbox formControlName="pagarFondoSolidaridad"></ion-checkbox>
-  </ion-item>
+    <ion-item>
+      <ion-label>Pagar Fondo de Solidaridad Pensional (si aplica)</ion-label>
+      <ion-checkbox formControlName="pagarFondoSolidaridad"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Incluir Auxilio de Transporte (si aplica)</ion-label>
+      <ion-checkbox formControlName="incluirAuxilioTransporte"></ion-checkbox>
+    </ion-item>
+  </div>
 
   <ion-item>
     <ion-label>Calcular Impuestos (simplificado)</ion-label>

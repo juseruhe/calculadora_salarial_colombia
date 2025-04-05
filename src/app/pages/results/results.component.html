@@ -12,23 +12,25 @@
       <ion-text>{{ results.tipoContrato }}</ion-text>
     </ion-item>
     <ion-item>
-      <ion-label><strong>Salario Bruto:</strong></ion-label>
+      <ion-label><strong>Ingresos Brutos Mensuales:</strong></ion-label>
       <ion-text>{{ results.salarioBruto | number }} COP</ion-text>
     </ion-item>
 
-    <h2>Deducciones</h2>
-    <ion-item>
-      <ion-label><strong>Salud (4%):</strong></ion-label>
-      <ion-text>{{ results.deducciones.salud | number }} COP</ion-text>
-    </ion-item>
-    <ion-item>
-      <ion-label><strong>Pensión (4%):</strong></ion-label>
-      <ion-text>{{ results.deducciones.pension | number }} COP</ion-text>
-    </ion-item>
-    <ion-item *ngIf="results.deducciones.fondoSolidaridad > 0">
-      <ion-label><strong>Fondo Solidaridad Pensional:</strong></ion-label>
-      <ion-text>{{ results.deducciones.fondoSolidaridad | number }} COP</ion-text>
-    </ion-item>
+    <div *ngIf="results.tipoContrato !== 'prestacion-servicios'">
+      <h2>Deducciones</h2>
+      <ion-item>
+        <ion-label><strong>Salud (4%):</strong></ion-label>
+        <ion-text>{{ results.deducciones.salud | number }} COP</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Pensión (4%):</strong></ion-label>
+        <ion-text>{{ results.deducciones.pension | number }} COP</ion-text>
+      </ion-item>
+      <ion-item *ngIf="results.deducciones.fondoSolidaridad > 0">
+        <ion-label><strong>Fondo Solidaridad Pensional:</strong></ion-label>
+        <ion-text>{{ results.deducciones.fondoSolidaridad | number }} COP</ion-text>
+      </ion-item>
+    </div>
 
     <h2>Impuestos (Simplificado)</h2>
     <ion-item *ngIf="results.impuestos > 0">
@@ -40,9 +42,17 @@
       <ion-text>No aplica (según el cálculo simplificado)</ion-text>
     </ion-item>
 
-    <h2>Salario Neto Estimado</h2>
+    <h2>Ingresos Netos Estimados</h2>
     <ion-item>
-      <ion-label><strong>Salario Neto:</strong></ion-label>
+      <ion-label><strong>Ingresos Netos (sin Aux. Transp.):</strong></ion-label>
+      <ion-text color="primary">{{ results.salarioNeto - results.auxilioTransporte | number }} COP</ion-text>
+    </ion-item>
+    <ion-item *ngIf="results.incluirAuxilioTransporte && results.tipoContrato !== 'prestacion-servicios' && results.salarioBruto <= 2 * results.sml">
+      <ion-label><strong>Auxilio de Transporte:</strong></ion-label>
+      <ion-text>{{ results.auxilioTransporte | number }} COP</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-label><strong>Ingresos Netos (con Aux. Transp. si aplica):</strong></ion-label>
       <ion-text color="success"><strong>{{ results.salarioNeto | number }} COP</strong></ion-text>
     </ion-item>
 
