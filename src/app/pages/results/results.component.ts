@@ -1,27 +1,24 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-results',
-  templateUrl: 'results.page.html',
-  styleUrls: ['results.page.scss']
+  templateUrl: './results.component.html',
+  styleUrls: ['./results.component.scss'],
+  standalone: false
 })
-export class ResultsComponent {
-  result: any;
+export class ResultsComponent implements OnInit {
+  results: any;
 
-  constructor(private navCtrl: NavController, private route: ActivatedRoute) {}
-
-  ngOnInit() {
-    this.route.data.subscribe((data: any) => {
-      this.result = data?.['result']; // Assuming you passed data with the key 'result' in your route configuration
-      if (this.result) {
-        console.log('Data received via ActivatedRoute:', this.result);
-      }
-    });
+  constructor(private router: Router) {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation && navigation.extras.state) {
+      this.results = navigation.extras.state;
+      console.log('Resultados:', this.results);
+    } else {
+      this.router.navigate(['/principal']); // Si no hay datos, volver a la calculadora
+    }
   }
 
-  goBack() {
-    this.navCtrl.navigateBack('/calculator');
-  }
+  ngOnInit() {}
 }

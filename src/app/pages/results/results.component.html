@@ -1,52 +1,63 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/calculator"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Resultados</ion-title>
+  <ion-toolbar>
+    <ion-title>Resultados del Cálculo</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Salario neto: {{result.netSalary | currency:'COP':'symbol':'1.0-0'}}</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-      <ion-list>
-        <ion-item>
-          <ion-label>Salario base</ion-label>
-          <ion-note slot="end">{{result.baseSalary | currency:'COP':'symbol':'1.0-0'}}</ion-note>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label>Subsidio transporte</ion-label>
-          <ion-note slot="end">{{result.transportSubsidy | currency:'COP':'symbol':'1.0-0'}}</ion-note>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label>Otros subsidios</ion-label>
-          <ion-note slot="end">{{result.otherSubsidies | currency:'COP':'symbol':'1.0-0'}}</ion-note>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label>Descuento salud</ion-label>
-          <ion-note slot="end">{{result.healthDiscount | currency:'COP':'symbol':'1.0-0'}}</ion-note>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label>Descuento pensión</ion-label>
-          <ion-note slot="end">{{result.pensionDiscount | currency:'COP':'symbol':'1.0-0'}}</ion-note>
-        </ion-item>
-        
-        <ion-item *ngIf="result.taxDiscount > 0">
-          <ion-label>Retención en la fuente</ion-label>
-          <ion-note slot="end">{{result.taxDiscount | currency:'COP':'symbol':'1.0-0'}}</ion-note>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
-  
-  <ion-button expand="block" (click)="goBack()">Nuevo cálculo</ion-button>
+  <div *ngIf="results">
+    <h2>Resumen</h2>
+    <ion-item>
+      <ion-label><strong>Tipo de Contrato:</strong></ion-label>
+      <ion-text>{{ results.tipoContrato }}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-label><strong>Salario Bruto:</strong></ion-label>
+      <ion-text>{{ results.salarioBruto | number }} COP</ion-text>
+    </ion-item>
+
+    <h2>Deducciones</h2>
+    <ion-item>
+      <ion-label><strong>Salud (4%):</strong></ion-label>
+      <ion-text>{{ results.deducciones.salud | number }} COP</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-label><strong>Pensión (4%):</strong></ion-label>
+      <ion-text>{{ results.deducciones.pension | number }} COP</ion-text>
+    </ion-item>
+    <ion-item *ngIf="results.deducciones.fondoSolidaridad > 0">
+      <ion-label><strong>Fondo Solidaridad Pensional:</strong></ion-label>
+      <ion-text>{{ results.deducciones.fondoSolidaridad | number }} COP</ion-text>
+    </ion-item>
+
+    <h2>Impuestos (Simplificado)</h2>
+    <ion-item *ngIf="results.impuestos > 0">
+      <ion-label><strong>Impuestos:</strong></ion-label>
+      <ion-text>{{ results.impuestos | number }} COP</ion-text>
+    </ion-item>
+    <ion-item *ngIf="results.impuestos === 0 && results.calcularImpuestos">
+      <ion-label><strong>Impuestos:</strong></ion-label>
+      <ion-text>No aplica (según el cálculo simplificado)</ion-text>
+    </ion-item>
+
+    <h2>Salario Neto Estimado</h2>
+    <ion-item>
+      <ion-label><strong>Salario Neto:</strong></ion-label>
+      <ion-text color="success"><strong>{{ results.salarioNeto | number }} COP</strong></ion-text>
+    </ion-item>
+
+    <h2>Información Adicional</h2>
+    <ion-item>
+      <ion-label><strong>SMLV 2025 (aproximado):</strong></ion-label>
+      <ion-text>{{ results.smlv | number }} COP</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-label><strong>Auxilio de Transporte 2025 (aproximado):</strong></ion-label>
+      <ion-text>{{ results.auxilioTransporte | number }} COP</ion-text>
+    </ion-item>
+
+    <ion-button expand="full" routerLink="/principal" routerDirection="back">
+      Realizar Otro Cálculo
+    </ion-button>
+  </div>
 </ion-content>

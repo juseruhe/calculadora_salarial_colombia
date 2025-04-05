@@ -1,62 +1,63 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SalaryCalculatorService {
-  private smlv2025: number = 1423500; // Valor hipotético del SMLV 2025
-  private transportSubsidy: number = 200000; // Auxilio de transporte 2025 (ejemplo)
-  
-  calculateNetSalary(baseSalary: number, contractType: string, hasTransport: boolean, extras: any): any {
-    let healthDiscount: number = 0;
-    let pensionDiscount: number = 0;
-    let taxDiscount: number = 0;
-    let totalDiscounts: number = 0;
-    let totalSubsidies: number = 0;
-    
-    // Cálculo de descuentos según tipo de contrato
-    switch(contractType) {
-      case 'fixed-term':
-      case 'indefinite':
-        // Descuentos para empleados con contrato laboral
-        healthDiscount = baseSalary * 0.04;
-        pensionDiscount = baseSalary * 0.04;
-        break;
-      case 'service':
-        // Descuentos para contratista por prestación de servicios
-        healthDiscount = baseSalary * 0.125;
-        pensionDiscount = baseSalary * 0.16;
-        break;
-      // Otros tipos de contrato...
+  private smlv2025 = 1423500; // Suponiendo un valor para 2025 (debes actualizarlo)
+  private auxilioTransporte2025 = 200000; // Suponiendo un valor para 2025 (debes actualizarlo)
+
+  calcularSalarioNeto(
+    tipoContrato: string,
+    salarioBruto: number,
+    pagarSalud: boolean,
+    pagarPension: boolean,
+    pagarFondoSolidaridad: boolean
+  ): number {
+    let salarioNeto = salarioBruto;
+
+    if (pagarSalud) {
+      salarioNeto -= salarioBruto * 0.04; // 4% para el empleado
     }
-    
-    // Subsidio de transporte
-    if(hasTransport && baseSalary <= this.smlv2025 * 2) {
-      totalSubsidies += this.transportSubsidy;
+    if (pagarPension) {
+      salarioNeto -= salarioBruto * 0.04; // 4% para el empleado
     }
-    
-    // Retención en la fuente (simplificado)
-    if(baseSalary > this.smlv2025 * 4) {
-      taxDiscount = baseSalary * 0.1; // 10% como ejemplo
+    if (pagarFondoSolidaridad && salarioBruto >= 4 * this.smlv2025) {
+      const exceso = salarioBruto - 4 * this.smlv2025;
+      salarioNeto -= exceso * 0.01; // Ejemplo de tarifa (varía)
     }
-    
-    totalDiscounts = healthDiscount + pensionDiscount + taxDiscount;
-    
-    return {
-      baseSalary,
-      contractType,
-      healthDiscount,
-      pensionDiscount,
-      taxDiscount,
-      totalDiscounts,
-      transportSubsidy: hasTransport ? this.transportSubsidy : 0,
-      otherSubsidies: extras.subsidies || 0,
-      totalSubsidies: totalSubsidies + (extras.subsidies || 0),
-      netSalary: baseSalary + totalSubsidies - totalDiscounts
-    };
+
+    return salarioNeto;
   }
-  
-  getSmlv2025(): number {
+
+  calcularDeducciones(salarioBruto: number, pagarSalud: boolean, pagarPension: boolean, pagarFondoSolidaridad: boolean): { salud: number, pension: number, fondoSolidaridad: number } {
+    const deducciones = { salud: 0, pension: 0, fondoSolidaridad: 0 };
+    if (pagarSalud) {
+      deducciones.salud = salarioBruto * 0.04;
+    }
+    if (pagarPension) {
+      deducciones.pension = salarioBruto * 0.04;
+    }
+    if (pagarFondoSolidaridad && salarioBruto >= 4 * this.smlv2025) {
+      const exceso = salarioBruto - 4 * this.smlv2025;
+      deducciones.fondoSolidaridad = exceso * 0.01;
+    }
+    return deducciones;
+  }
+
+  calcularImpuestos(salarioNeto: number): number {
+    // Este es un ejemplo MUY SIMPLIFICADO. El cálculo real de impuestos en Colombia es complejo y depende de muchos factores.
+    if (salarioNeto > 3000000) {
+      return salarioNeto * 0.10; // Ejemplo de tarifa del 10%
+    }
+    return 0;
+  }
+
+  obtenerSMLV2025(): number {
     return this.smlv2025;
+  }
+
+  obtenerAuxilioTransporte2025(): number {
+    return this.auxilioTransporte2025;
   }
 }

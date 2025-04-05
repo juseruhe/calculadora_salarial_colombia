@@ -2,11 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CalculatorComponent } from './calculator.component';
 
-import { CalculatorRoutingModule } from './calculator-routing.module';
+
+
 import { CalculatorFormComponent } from 'src/app/components/calculator-form/calculator-form.component';
-import { CalculatorFormModule } from 'src/app/components/calculator-form/calculator-form.module';
 
 
 
@@ -16,14 +15,12 @@ import { CalculatorFormModule } from 'src/app/components/calculator-form/calcula
     CommonModule,
     FormsModule,
     IonicModule,
-    CalculatorRoutingModule,
-   ReactiveFormsModule,
-   CalculatorFormModule
-  
-   
+    ReactiveFormsModule
+
     
   ],
-  declarations: [CalculatorComponent],
+  declarations: [CalculatorFormComponent],
+  exports: [CalculatorFormComponent]
   
 })
-export class CalculatorModule {}
+export class CalculatorFormModule {}
