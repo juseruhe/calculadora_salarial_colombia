@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Calculadora SMLV 2025</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Salario base</ion-label>
+      <ion-input type="number" [(ngModel)]="baseSalary"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Tipo de contrato</ion-label>
+      <ion-select [(ngModel)]="contractType">
+        <ion-select-option *ngFor="let type of contractTypes" [value]="type.value">
+          {{type.label}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label>Recibe subsidio de transporte</ion-label>
+      <ion-toggle [(ngModel)]="hasTransport"></ion-toggle>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Otros subsidios</ion-label>
+      <ion-input type="number" [(ngModel)]="extras.subsidie"></ion-input>
+    </ion-item>
+  </ion-list>
+  
+  <ion-button expand="block" (click)="calculate()">Calcular salario neto</ion-button>
+</ion-content>

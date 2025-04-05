@@ -7,8 +7,16 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
+    path: 'principal',
+    loadChildren: () => import('./pages/calculator/calculator.module').then(m=> m.CalculatorModule)
+  },
+  {
+    path: 'resultados',
+    loadChildren: () => import('./pages/results/results.module').then(m=> m.ResultsModule)
+  },
+  {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'principal',
     pathMatch: 'full'
   },
 ];
