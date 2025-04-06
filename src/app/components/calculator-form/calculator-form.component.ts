@@ -12,7 +12,6 @@ import { SalaryCalculatorService } from '../../services/salary-calculator.servic
 export class CalculatorFormComponent implements OnInit {
   calculatorForm: FormGroup;
   smlv2025: number;
-  auxilioTransporte2025: number;
 
   constructor(
     private fb: FormBuilder,
@@ -20,19 +19,17 @@ export class CalculatorFormComponent implements OnInit {
     private salaryCalculator: SalaryCalculatorService
   ) {
     this.smlv2025 = this.salaryCalculator.obtenerSMLV2025();
-    this.auxilioTransporte2025 = this.salaryCalculator.obtenerAuxilioTransporte2025();
-    
     this.calculatorForm = this.fb.group({
       tipoContrato: ['indefinido', Validators.required],
       salarioBruto: [
         this.smlv2025, 
-        [Validators.required, Validators.min(this.smlv2025)]
+        [
+          Validators.required, 
+          Validators.min(this.smlv2025)
+        ] // Validadores síncronos como array
       ],
-      pagarSalud: [true],
-      pagarPension: [true],
-      pagarFondoSolidaridad: [false],
       calcularImpuestos: [false],
-      incluirAuxilioTransporte: [true]
+      incluirAuxilioTransporte: [true],
     });
   }
 
@@ -41,58 +38,35 @@ export class CalculatorFormComponent implements OnInit {
   onSubmit() {
     if (this.calculatorForm.valid) {
       const formData = this.calculatorForm.value;
-      
-      // Calcular salario neto sin auxilio de transporte
-      const salarioNetoSinAuxilio = this.salaryCalculator.calcularSalarioNeto(
-        formData.tipoContrato,
-        formData.salarioBruto,
-        formData.pagarSalud,
-        formData.pagarPension,
-        formData.pagarFondoSolidaridad
-      );
-
-      // Calcular deducciones detalladas
       const deducciones = this.salaryCalculator.calcularDeducciones(
         formData.salarioBruto,
-        formData.pagarSalud,
-        formData.pagarPension,
-        formData.pagarFondoSolidaridad,
         formData.tipoContrato
       );
+      const salarioNetoSinAuxilio = formData.salarioBruto - deducciones.salud - deducciones.pension - deducciones.fondoSolidaridad;
 
-      // Calcular impuestos si corresponde
       const impuestos = formData.calcularImpuestos
         ? this.salaryCalculator.calcularImpuestos(salarioNetoSinAuxilio, formData.tipoContrato)
         : 0;
 
-      // Calcular salario neto final (con auxilio de transporte si aplica)
-      const salarioNetoFinal = formData.incluirAuxilioTransporte
+      const salarioNetoConAuxilio = formData.incluirAuxilioTransporte
         ? this.salaryCalculator.calcularSalarioNetoConAuxilioTransporte(
-            formData.salarioBruto,
-            salarioNetoSinAuxilio - impuestos,
+            formData.salarioBruto, 
+            salarioNetoSinAuxilio - impuestos, 
             formData.tipoContrato
           )
         : salarioNetoSinAuxilio - impuestos;
 
-      // Navegar a la página de resultados con toda la información
       this.router.navigate(['/resultados'], {
         state: {
           salarioBruto: formData.salarioBruto,
           tipoContrato: formData.tipoContrato,
-          salarioNeto: salarioNetoFinal,
+          salarioNeto: salarioNetoConAuxilio,
           deducciones: deducciones,
           impuestos: impuestos,
           smlv: this.smlv2025,
-          auxilioTransporte: formData.incluirAuxilioTransporte && 
-                            formData.tipoContrato !== 'prestacion-servicios' && 
-                            formData.salarioBruto <= 2 * this.smlv2025 
-                            ? this.auxilioTransporte2025 
-                            : 0,
-          detallesCalculo: {
-            salarioNetoSinAuxilio: salarioNetoSinAuxilio,
-            salarioNetoAntesImpuestos: salarioNetoSinAuxilio,
-            salarioNetoConImpuestos: salarioNetoSinAuxilio - impuestos
-          }
+          auxilioTransporte: formData.incluirAuxilioTransporte ? 
+                           this.salaryCalculator.obtenerAuxilioTransporte2025() : 0,
+          incluirAuxilioTransporte: formData.incluirAuxilioTransporte,
         },
       });
     }

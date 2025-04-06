@@ -15,27 +15,10 @@
   </ion-item>
   <ion-text color="secondary">SMLV 2025 (aproximado): {{ smlv2025 | number }}</ion-text>
 
-  <div *ngIf="calculatorForm.get('tipoContrato')?.value !== 'prestacion-servicios'">
-    <ion-item>
-      <ion-label>Pagar Salud (4%)</ion-label>
-      <ion-checkbox formControlName="pagarSalud"></ion-checkbox>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Pagar Pensión (4%)</ion-label>
-      <ion-checkbox formControlName="pagarPension"></ion-checkbox>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Pagar Fondo de Solidaridad Pensional (si aplica)</ion-label>
-      <ion-checkbox formControlName="pagarFondoSolidaridad"></ion-checkbox>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Incluir Auxilio de Transporte (si aplica)</ion-label>
-      <ion-checkbox formControlName="incluirAuxilioTransporte"></ion-checkbox>
-    </ion-item>
-  </div>
+  <ion-item *ngIf="calculatorForm.get('tipoContrato')?.value !== 'prestacion-servicios'">
+    <ion-label>Incluir Auxilio de Transporte (si aplica)</ion-label>
+    <ion-checkbox formControlName="incluirAuxilioTransporte"></ion-checkbox>
+  </ion-item>
 
   <ion-item>
     <ion-label>Calcular Impuestos (simplificado)</ion-label>

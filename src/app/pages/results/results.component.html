@@ -16,21 +16,19 @@
       <ion-text>{{ results.salarioBruto | number }} COP</ion-text>
     </ion-item>
 
-    <div *ngIf="results.tipoContrato !== 'prestacion-servicios'">
-      <h2>Deducciones</h2>
-      <ion-item>
-        <ion-label><strong>Salud (4%):</strong></ion-label>
-        <ion-text>{{ results.deducciones.salud | number }} COP</ion-text>
-      </ion-item>
-      <ion-item>
-        <ion-label><strong>Pensión (4%):</strong></ion-label>
-        <ion-text>{{ results.deducciones.pension | number }} COP</ion-text>
-      </ion-item>
-      <ion-item *ngIf="results.deducciones.fondoSolidaridad > 0">
-        <ion-label><strong>Fondo Solidaridad Pensional:</strong></ion-label>
-        <ion-text>{{ results.deducciones.fondoSolidaridad | number }} COP</ion-text>
-      </ion-item>
-    </div>
+    <h2>Deducciones</h2>
+    <ion-item>
+      <ion-label><strong>Salud:</strong></ion-label>
+      <ion-text>{{ results.deducciones.salud | number }} COP</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-label><strong>Pensión:</strong></ion-label>
+      <ion-text>{{ results.deducciones.pension | number }} COP</ion-text>
+    </ion-item>
+    <ion-item *ngIf="results.deducciones.fondoSolidaridad > 0">
+      <ion-label><strong>Fondo Solidaridad Pensional:</strong></ion-label>
+      <ion-text>{{ results.deducciones.fondoSolidaridad | number }} COP</ion-text>
+    </ion-item>
 
     <h2>Impuestos (Simplificado)</h2>
     <ion-item *ngIf="results.impuestos > 0">
@@ -45,7 +43,7 @@
     <h2>Ingresos Netos Estimados</h2>
     <ion-item>
       <ion-label><strong>Ingresos Netos (sin Aux. Transp.):</strong></ion-label>
-      <ion-text color="primary">{{ results.salarioNeto - results.auxilioTransporte | number }} COP</ion-text>
+      <ion-text color="primary">{{ results.salarioNeto - (results.incluirAuxilioTransporte && results.tipoContrato !== 'prestacion-servicios' && results.salarioBruto <= 2 * results.sml ? results.auxilioTransporte : 0) | number }} COP</ion-text>
     </ion-item>
     <ion-item *ngIf="results.incluirAuxilioTransporte && results.tipoContrato !== 'prestacion-servicios' && results.salarioBruto <= 2 * results.sml">
       <ion-label><strong>Auxilio de Transporte:</strong></ion-label>
@@ -65,6 +63,9 @@
       <ion-label><strong>Auxilio de Transporte 2025 (aproximado):</strong></ion-label>
       <ion-text>{{ results.auxilioTransporte | number }} COP</ion-text>
     </ion-item>
+    
+
+  
 
     <ion-button expand="full" routerLink="/principal" routerDirection="back">
       Realizar Otro Cálculo
