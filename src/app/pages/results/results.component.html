@@ -43,7 +43,7 @@
     <h2>Ingresos Netos Estimados</h2>
     <ion-item>
       <ion-label><strong>Ingresos Netos (sin Aux. Transp.):</strong></ion-label>
-      <ion-text color="primary">{{ results.salarioNeto - (results.incluirAuxilioTransporte && results.tipoContrato !== 'prestacion-servicios' && results.salarioBruto <= 2 * results.sml ? results.auxilioTransporte : 0) | number }} COP</ion-text>
+      <ion-text color="primary">{{ results.salarioBruto - results.deducciones.salud - results.deducciones.pension | number }} COP</ion-text>
     </ion-item>
     <ion-item *ngIf="results.incluirAuxilioTransporte && results.tipoContrato !== 'prestacion-servicios' && results.salarioBruto <= 2 * results.sml">
       <ion-label><strong>Auxilio de Transporte:</strong></ion-label>

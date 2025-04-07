@@ -19,7 +19,7 @@ export class SalaryCalculatorService {
     let salarioNeto = salarioBruto;
     const deducciones = this.calcularDeducciones(salarioBruto, tipoContrato);
     salarioNeto -= deducciones.salud;
-    salarioNeto -= deducciones.pension;
+   salarioNeto -= deducciones.pension;
     salarioNeto -= deducciones.fondoSolidaridad;
     return salarioNeto;
   }
